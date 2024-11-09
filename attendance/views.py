@@ -20,7 +20,7 @@ from .serializers import (
     AttendanceSerializer,
     LClassesSerializer
 )
-from .permissions import IsAdmin, IsLecturer, IsStudent
+#from .permissions import IsAdmin, IsLecturer, IsStudent
 import pandas as pd
 
 
