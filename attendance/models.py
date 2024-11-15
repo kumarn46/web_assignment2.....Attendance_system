@@ -83,6 +83,9 @@ class students(models.Model):
     def __str__(self):
         return f"{self.id} - {self.first_name} - {self.last_name}"
 
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Enrollment(models.Model):
     id = models.AutoField(primary_key=True)
@@ -96,6 +99,7 @@ class Enrollment(models.Model):
 
 
 class Attendance(models.Model):
+    id = models.AutoField(primary_key=True)
     student = models.ForeignKey('students', on_delete=models.CASCADE)
     class_instance = models.ForeignKey(classes, on_delete=models.CASCADE)
     is_present = models.BooleanField()

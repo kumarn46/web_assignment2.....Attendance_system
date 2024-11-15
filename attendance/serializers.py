@@ -47,16 +47,15 @@ class StudentsSerializer(serializers.ModelSerializer):
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
-    students = serializers.PrimaryKeyRelatedField(queryset=students.objects.all())
-    course_code = serializers.PrimaryKeyRelatedField(queryset=Courses.objects.all())
-    #class_number = serializers.PrimaryKeyRelatedField(queryset=classes.objects.all())
-
+    student_name = serializers.CharField(source='students.get_full_name', read_only=True)
+    course_name = serializers.CharField(source='course.course_name', read_only=True)
+    class_number = serializers.IntegerField(source='classes.class_number', read_only=True)
+    class_time = serializers.TimeField(source='classes.class_time', read_only=True)
+    enrollment_date = serializers.DateField()
 
     class Meta:
         model = Enrollment
-        fields = ['id', 'students', 'course_code', 'enrollment_date']
-
-
+        fields = ['id', 'student_name', 'course_name', 'class_number', 'class_time', 'enrollment_date']
 
 
 class AttendanceSerializer(serializers.ModelSerializer):

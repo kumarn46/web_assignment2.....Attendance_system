@@ -12,3 +12,4 @@ admin.site.register(models.Enrollment)
 admin.site.register(models.Attendance)
 admin.site.register(models.CollegeDay)
 admin.site.register(models.l_classes)
+
