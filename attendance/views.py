@@ -7,6 +7,9 @@ from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import JsonResponse
+from .models import Attendance
+from django.contrib.auth.decorators import login_required
 
 from .models import semester, Courses, lecturer, classes, CollegeDay, students, Enrollment, Attendance, l_classes
 from .serializers import (
@@ -80,36 +83,7 @@ class StudentsViewSet(viewsets.ModelViewSet):
     serializer_class = StudentsSerializer
     #permission_classes = [IsAuthenticated]
 
-    def upload_students(request):
-        if request.method == 'POST' and request.FILES['file']:
-            file = request.FILES['file']
-            fs = FileSystemStorage()
-            filename = fs.save(file.name, file)
-            uploaded_file_url = fs.url(filename)
 
-            try:
-                wb = load_workbook(fs.open(filename))
-                sheet = wb.active
-
-                for row in sheet.iter_rows(min_row=2, values_only=True):  # Assuming first row is headers
-                    student_id, first_name, last_name = row
-                    # Check if the student already exists
-                    student, created = Student.objects.get_or_create(
-                        student_id=student_id,
-                        defaults={'first_name': first_name, 'last_name': last_name}
-                    )
-                    if created:
-                        print(f"Student {first_name} {last_name} added.")
-                    else:
-                        print(f"Student {first_name} {last_name} already exists.")
-
-                messages.success(request, 'Students uploaded successfully.')
-                return redirect('dashboard')
-            except Exception as e:
-                messages.error(request, f"Error processing file: {e}")
-                return redirect('upload_students')
-
-        return render(request, 'upload_students.html', {'form': UploadFileForm()})
 
 
 # ViewSet for Enrollment
@@ -124,7 +98,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     queryset = Attendance.objects.all()
     serializer_class = AttendanceSerializer
     #permission_classes = [IsAuthenticated]
-
+'''
 def email_students_with_poor_attendance(request):
     if request.method == 'POST':
         form = EmailAttendanceForm(request.POST)
@@ -158,12 +132,81 @@ def email_students_with_poor_attendance(request):
 
     return render(request, 'email_students_with_poor_attendance.html', {'form': EmailAttendanceForm()})
 
+'''
 
 # ViewSet for LClasses
 class LClassesViewSet(viewsets.ModelViewSet):
     queryset = l_classes.objects.all()
     serializer_class = LClassesSerializer
     #permission_classes = [IsAuthenticated]
+
+
+class StudentAttendanceViewSet(viewsets.ViewSet):
+    def list(self, request, student_id=None):
+        records = Attendance.objects.filter(student_id=student_id)
+        data = AttendanceSerializer(records, many=True).data
+        return Response(data)
+
+'''
+def upload_students(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        file = request.FILES['file']
+
+        # Ensure the file is an Excel file
+        if not file.name.endswith('.xlsx'):
+            messages.error(request, 'The uploaded file is not a valid Excel file. Please upload an .xlsx file.')
+            return redirect('upload_students')
+
+        fs = FileSystemStorage()
+        filename = fs.save(file.name, file)
+        uploaded_file_url = fs.url(filename)
+
+        try:
+            # Load the uploaded Excel file
+            wb = load_workbook(fs.open(filename))
+            sheet = wb.active
+
+            # Ensure there are enough columns in the file (at least 3)
+            expected_columns = 3
+            if sheet.max_column < expected_columns:
+                messages.error(request, 'The uploaded file does not contain enough columns.')
+                return redirect('upload_students')
+
+            # Loop through each row (assuming first row is headers)
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if len(row) < expected_columns:
+                    continue  # Skip incomplete rows
+
+                student_id, first_name, last_name = row
+
+                # Ensure that all required columns (student_id, first_name, last_name) are present
+                if not student_id or not first_name or not last_name:
+                    continue  # Skip rows with missing data
+
+                # Try to get or create the student
+                student, created = Student.objects.get_or_create(
+                    student_id=student_id,
+                    defaults={'first_name': first_name, 'last_name': last_name}
+                )
+
+                if created:
+                    print(f"Student {first_name} {last_name} added.")
+                else:
+                    print(f"Student {first_name} {last_name} already exists.")
+
+            # Success message after processing
+            messages.success(request, 'Students uploaded successfully.')
+            return redirect('dashboard')
+
+        except Exception as e:
+            # Handle any errors that occur during the file processing
+            messages.error(request, f"Error processing file: {e}")
+            return redirect('upload_students')
+
+    return render(request, 'upload_students.html', {'form': UploadFileForm()})
+    
+    '''
+
 
 
 

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
-  const [formData, setFormData] = useState({ course_name: '', course_code: '', description: '' });
+  const [formData, setFormData] = useState({ course_name: '', course_code: '', semester_id: '' });
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -41,7 +41,7 @@ const Courses = () => {
         await axios.post('http://127.0.0.1:8000/api/courses/', formData);
       }
       fetchCourses();
-      setFormData({ course_name: '', course_code: '', description: '' });
+      setFormData({ course_name: '', course_code: '', semester: '' });
     } catch (err) {
       console.error(isEditing ? 'Error updating course:' : 'Error adding course:', err);
       setError(isEditing ? 'Error updating course' : 'Error adding course');
@@ -64,7 +64,7 @@ const Courses = () => {
     setFormData({
       course_name: course.course_name,
       course_code: course.course_code,
-      description: course.description,
+      semester: course.semester,
     });
   };
 
@@ -95,9 +95,9 @@ const Courses = () => {
           style={{ marginRight: '10px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
         />
         <input
-          name="description"
-          placeholder="Description"
-          value={formData.description}
+          name="semester"
+          placeholder="semester"
+          value={formData.semester}
           onChange={handleChange}
           required
           style={{ marginRight: '10px', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
@@ -112,7 +112,7 @@ const Courses = () => {
           <tr>
             <th style={tableHeaderStyle}>Course Name</th>
             <th style={tableHeaderStyle}>Course Code</th>
-            <th style={tableHeaderStyle}>Description</th>
+            <th style={tableHeaderStyle}>Semester</th>
             <th style={tableHeaderStyle}>Actions</th>
           </tr>
         </thead>
@@ -122,7 +122,7 @@ const Courses = () => {
               <tr key={course.id} style={{ borderBottom: '1px solid #ccc' }}>
                 <td style={tableCellStyle}>{course.course_name}</td>
                 <td style={tableCellStyle}>{course.course_code}</td>
-                <td style={tableCellStyle}>{course.description}</td>
+                <td style={tableCellStyle}>{course.semester_id}</td>
                 <td style={tableCellStyle}>
                   <button onClick={() => handleEdit(course)} style={editButtonStyle}>
                     Edit

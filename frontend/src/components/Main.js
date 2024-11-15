@@ -15,6 +15,7 @@ import Lecturers from "./Lecturers";
 import Enrollment from "./Enrollment";
 import Students from "./Students";
 import LecturerDashboard from "./Lecturer_Dashboard";
+import Student_Dashboard from './Student_Dashboard';
 
 
 
@@ -30,7 +31,7 @@ function Main() {
                 <Route path="/user-register" element={<Register/>}/>
                 <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/lecturer_dashboard" element={<LecturerDashboard/>}/>
-
+                <Route path="/student_dashboard" element={<Student_Dashboard/>}/>
                 <Route path="/semesters" element={<Semesters/>}/>
                 <Route path="/courses" element={<Courses/>}/>
                 <Route path="/classes" element={<Classes/>}/>

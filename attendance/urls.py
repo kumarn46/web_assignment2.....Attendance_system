@@ -9,7 +9,8 @@ from .views import (
     StudentsViewSet,
     EnrollmentViewSet,
     AttendanceViewSet,
-    LClassesViewSet
+    LClassesViewSet,
+    StudentAttendanceViewSet,
 )
 
 # Initialize the router
@@ -23,8 +24,11 @@ router.register(r'students', StudentsViewSet)
 router.register(r'enrollments', EnrollmentViewSet)
 router.register(r'attendance', AttendanceViewSet)
 router.register(r'l_classes', LClassesViewSet)
+router.register(r'student_attendance', StudentAttendanceViewSet, basename='student_attendance')
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
+   # path('upload_students/', upload_students, name='upload_students'),
+
 ]

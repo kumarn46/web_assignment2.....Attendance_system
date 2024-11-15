@@ -12,11 +12,7 @@ function CourseDetail() {
                 <div className="col-8">
                     <h3>Course Title:</h3>
                     <h4>Course Code:</h4>
-                    <p>Computer science is the study of computer hardware and software. Those who study computer
-                        science, consequently, can specialize in a wide range of interrelated subfields,
-                        from artificial intelligence and cryptography to computer engineering and software
-                        development.</p>
-                    <p className="fw-bold"> Lecturer :</p>
+                    <p className="fw-bold"> semester : </p>
                     <p className="fw-bold">Total Enrolled: 456 Students </p>
                 </div>
             </div>
