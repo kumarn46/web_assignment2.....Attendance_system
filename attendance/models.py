@@ -101,7 +101,7 @@ class Enrollment(models.Model):
 class Attendance(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey('students', on_delete=models.CASCADE)
-    class_instance = models.ForeignKey(classes, on_delete=models.CASCADE)
+    class_instance = models.ForeignKey("classes", on_delete=models.CASCADE)
     is_present = models.BooleanField()
 
     def __str__(self):

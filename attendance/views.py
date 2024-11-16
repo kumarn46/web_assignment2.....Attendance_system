@@ -143,9 +143,21 @@ class LClassesViewSet(viewsets.ModelViewSet):
 
 class StudentAttendanceViewSet(viewsets.ViewSet):
     def list(self, request, student_id=None):
-        records = Attendance.objects.filter(student_id=student_id)
+        print(f"Received student_id: {student_id}")  # Debugging
+
+        if not student_id:
+            return Response({"error": "Student ID is required"}, status=400)
+
+        records = Attendance.objects.filter(student__id=student_id)
+        print(f"Found records: {records}")  # Debugging
+
+        if not records.exists():
+            return Response({"message": "No attendance records found for the given student."}, status=404)
+
         data = AttendanceSerializer(records, many=True).data
         return Response(data)
+
+
 
 '''
 def upload_students(request):

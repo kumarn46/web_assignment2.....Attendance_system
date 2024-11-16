@@ -67,6 +67,8 @@ class AttendanceSerializer(serializers.ModelSerializer):
         fields = ['student', 'class_instance', 'is_present']
 
 
+
+
 class LClassesSerializer(serializers.ModelSerializer):
     semester = serializers.PrimaryKeyRelatedField(queryset=semester.objects.all())
     course_code = serializers.PrimaryKeyRelatedField(queryset=Courses.objects.all())
